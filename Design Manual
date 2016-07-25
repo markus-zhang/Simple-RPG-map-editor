@@ -1,0 +1,33 @@
+OK I need to lock the features and the look of the editor, otherwise this won't get finished in my life.
+I. The general look
+Note that the game window is going to be 800 * 600, with the scenario area as 600 * 600. At the right side we will have inventory/command/etc.
+The dimension of the editor will be set as 800 * 600, with the texture/entity/buttons window occupying the right part of 200 * 600.
+Still wondering where should I put the buttons, but the texture subwindow is going to take the lower 160 * 160 (40 is left for scroll buttons);
+And the entity subwindow is going to take the middle 160 * 160 (40 is left for scroll buttons);
+
+II. Textures and Entities
+Tile sheet (Textures) must have width of 160 pixels. The program will read the height and display the forst ten rows;
+If it has less than 10 rows then the scroll buttons will be grayed out.
+
+Entity sheet has no such restrictions, because I assume that each entity takes one row with all its frames. Some entities only have one frame,
+e.g. coin and weapons and player character; Some have 2 frames (containers mostly); Characters have 4 frames (all enemies).
+
+I'm going to create a special *cScrollContainer for all subwindows that consist of a display window and scroll buttons. Speaking in codes, it
+contains a few *cGraphics: One for the Tile Sheet; One for the displayed Tile Sheet; Two for scroll buttons. It has its own Render() which calls
+all the Render() of the components.
+
+For the entities, the display will be different. Instead of displaying all the frames, it only displays the first frame of each row,
+i.e. first frame of each entity. So the display will be very narrow. To compensate for this, ID of each entity will be displayed also.
+We will read from external .txt file for the IDs. (e.g. for the entity sheet "entity.png" read "entitiy.txt" for IDs)
+
+III. Map subwindow
+We will also use *cScrollContainer for the map. The up left corner tile coordination will be decided by the editor .ini file.
+i.e. For the displayed Tile Sheet component, we will first check the coordination (say 160, 160, which is row11 and col11) and show
+every thing from (160, 160) to (160+512, 160+512), with the map subwindow the size of 512 * 512. When we quit the editor, the current
+coordination of up-left corner tile will be recorded in the .ini file.
+
+Conclusions: 
+1. One *cScrollContainer for the tile subwindow;
+2. One *cScrollContainer for the entity subwindow;
+3. A few *cGUIButtons for the editor buttons (save/ load/ exit/ undo/ tile mode/ entity mode)
+4. One *cScrollContainer for the map subwindow;
