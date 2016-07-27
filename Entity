@@ -1,6 +1,97 @@
 I'd like to facilitate a data-driven entity design.
-[b]1. Editor aspect[/b]
-At the beginning, the editor will load the first frame of each entity, be it static (only 1 frame) or dynamic (4 frames). We will prepare
-Two files:
 
-File 1: This 
+1. Editor aspect
+At the beginning, the editor will load the first frame of each entity, be it static (only 1 frame) or interactive (2 frames) or 
+dynamic (4 frames). We will prepare two files:
+
+File 1: This is the sprite sheet for all the entities.
+1) Structure:
+    Row 1~n:        All static entities (trees, for example) will be put in front of dynamic ones. They only have one frame;
+    Row n+1~n+k-1:  All interactive entities (chests, doors) have 2 frames;
+    Row n+k~:       All dynamic entities (enemies, for example) have four frames.
+
+File 2: This is the data sheet for all the entities.
+Data sheet tells the editor all the other information of the entities.
+1) Structure:
+    They are arranged as the same order of the sprite sheet.
+    Considering a sample sprite sheet:
+    Row 1: Rock (1 frame)
+    Row 2: Tree1 (1 frame)
+    Row 3: Tree2 (1 frame)
+    Row 4: Chest (2 frames)
+    Row 5: Cleric (4 frames)
+    Row 6: Mage (4 frames)
+    
+    The corresponding data sheet would be:
+    Row 1: Rock       <-string ID
+    Row 2: 0          <-x coordinate in sprite sheet
+    Row 3: 0          <-y coordinate in sprite sheet
+    Row 4: 32         <-Width
+    Row 5: 32         <-Height
+    Row 6: 0          <-HP (0 means the player can't attack it)
+    Row 7: 0          <-Money dispensed when destroyed
+    Row 8: 0          <-Exp rewarded when destroyed
+    Row 9: 0          <-Interactive? (0 indicates none)
+    Row 10: Tree1       <-string ID
+    Row 11: 0           <-x coordinate in sprite sheet
+    Row 12: 32          <-y coordinate in sprite sheet
+    Row 13: 32          <-Width
+    Row 14: 32          <-Height
+    Row 15: 0           <-HP (0 means the player can't attack it)
+    Row 16: 0           <-Money dispensed when destroyed
+    Row 17: 0           <-Exp rewarded when destroyed
+    Row 18: 0           <-Interactive?
+    ...
+    Row 28: Chest       <-string ID
+    Row 26: 0           <-x coordinate in sprite sheet
+    Row 27: 96          <-y coordinate in sprite sheet
+    Row 28: 32          <-Width
+    Row 29: 32          <-Height
+    Row 30: 0           <-HP
+    Row 31: 10          <-Money dispensed when destroyed
+    Row 32: 0           <-Exp rewarded when destroyed
+    Row 33: 1           <-Interactive?
+    ...
+    
+2) You can see that the data sheet serves as a database for all entities. This is definitely not the final version as I'm not sure if we
+   have enough parameters.
+   When the editor loads, it will not touch the data sheet. Instead it only takes the first frame of each entity and list them on the
+   second "row" of the editor, i.e. treats them simply as sprite sheets. If the editor is not on Entity Mode, they are grayed out (or 
+   something easier with SDL2), otherwise they are displayed normally.
+   
+3) If you click on any of the entity, the editor would first show it at the cursor. We can't prevent you from putting a cleric in the water
+   or a chest on a castle so you have to be careful.
+   The editor will immediately generate a class Entity object and push it into the Entity Vector. If you go back and read the data sheet
+   you will notice that there is no x and y coordinates for the entities (only the coordinates for clipping), that's because we do not
+   know that until we generate one, and the corresponding x and y coordinates will be stored in the object, too.
+   For example, let's say we put a chest on (0, 32), and then we save the map. The entity.sav will be like:
+   Row 1: Chest         <-string ID
+   Row 2: 0             <-x coordinate on screen
+   Row 3: 32            <-y coordinate on screen
+   Row 4: 0             <-x coordinate in sprite sheet
+   Row 5: 96            <-y coordinate in sprite sheet
+   Row 6: 32            <-Width
+   Row 7: 32            <-Height
+   Row 8: 0             <-HP
+   Row 9: 10            <-Money dispensed when destroyed
+   Row 10: 0            <-Exp rewarded when destroyed
+   Row 11: 1            <-Interactive?
+   
+   Actually I'm wondering, maybe I can add the coordinates on screen into the data sheet and just put them as 0, so I don't need two
+   functions to read two almost identical files!
+   
+4) Now the final question is how do we load entities. It's not that difficult I guess. The editor would read entity.sav, and read Row 4
+and Row 5 to paint the sprite of the entity on the coordinations set by Row 2 and Row 3.
+So the read function basically has two purposes:
+ASSUMING THAT THE DATA SHEET HAS THE SAME FORMAT OF ENTITY.SAV
+No.1: Just read Row 4 and Row 5 to clip the sprite sheet and paint all the entities (just as how we show the GUI Buttons)
+No.2: read Row 2~Row 5 to show the sprite at the specified location
+
+5) Appendix: How do we save the information of entities?
+Remember that "The editor will immediately generate a class Entity object and push it into the Entity Vector."? Yes each time we push an
+entity object into the Entity Vector, we push the "information of an entity" object into the Entity Information Vector (just like what we
+do to the map tiles). This information object contains exactly the same information of the above table (Row 1 ~ Row 11), so the only thing
+we need to do is to write everything into Entity.sav.
+Note that in order to eliminate replicates (because when we save, we clear the content of Entity.sav and dump everything in the vector of
+"entity information object" into it), we use the same trick, i.e. before we push the object, we check if we have some other entity in the 
+same position (by comparing the x and y coordinates), and if we have we will delete the old one and then push the new one.
