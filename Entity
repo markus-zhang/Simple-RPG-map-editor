@@ -1,0 +1,6 @@
+I'd like to facilitate a data-driven entity design.
+[b]1. Editor aspect[/b]
+At the beginning, the editor will load the first frame of each entity, be it static (only 1 frame) or dynamic (4 frames). We will prepare
+Two files:
+
+File 1: This 
