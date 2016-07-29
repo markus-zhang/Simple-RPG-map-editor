@@ -32,6 +32,7 @@ Data sheet tells the editor all the other information of the entities.
     Row 7: 0          <-Money dispensed when destroyed
     Row 8: 0          <-Exp rewarded when destroyed
     Row 9: 0          <-Interactive? (0 indicates none)
+    (In the real data sheet I also add a row for Direction and one for the number of frames)
     Row 10: Tree1       <-string ID
     Row 11: 0           <-x coordinate in sprite sheet
     Row 12: 32          <-y coordinate in sprite sheet
