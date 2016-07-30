@@ -1,0 +1,20 @@
+I think I'd better write this down, otherwise I may have a difficult time reading the codes next time.
+
+1) Trigger
+If the designer presses "s" or click the Save Button on the up-right corner of the screen, the Save Procedure is triggered.
+
+2) Preparation
+Even before the Save Procedure has been triggered, the editor constantly prepares itself for saving.
+Each time a new tile has been painted on the screen, cEditorState will push_back a new cTile into m_Map, which is a vector of <cTile>.  It will also
+push a new cTileFile (i.e. the data object describing all the data for a tile) into m_MapData.
+*Note:  m_Map is the object storing all the cTile objects. We need m_Map to show all the painted tiles (i.e. the whole map) on screen.
+        m_Map has nothing to do with saving the map.
+        m_MapData is the real object we are to consulate when the Save Procedure has been invoked.
+
+3) Save Procedure
+Now we must look into cFile.h to reveal the Save Procedure.
+The function is called SaveMap(). You can see the map format at the beginning of the file. The whole procedure is pretty simple:
+Step 1: Open "map.txt" (Considering reading the file name from Defines.h, which in turn reads from Editor.ini)
+Step 2: Write line by line
+
+It's a shame that I didn't write any code for potential errors, except the one that map.txt doesn't exist.
