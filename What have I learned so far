@@ -1,0 +1,16 @@
+1. About passing a const vector to a function
+    Example:  SaveMapTest(const char* filename, const vector<cTile>& mapvector)
+    1)  If I use an iterator (say, vector<cTile>::iterator it; ), add "auto" before it
+      Example: 
+        for (auto it = mapvector.begin(); it != mapvector.end(); it ++)
+      Explanation:
+        I don't know why, still consulting stackflow...
+
+2. If a pass a const vector to a function, I can only call member functions that marked with "const"
+    Example:  SaveMapTest(const char* filename, const vector<cTile>& mapvector)
+              And in SaveMapTest() I would call a member function to get m_X
+              map_file << (*it).GetX() << "\n";   // it is the iterator
+      WRONG:    in class cTile:
+                int GetX()  { return m_X; }
+      CORRECT:  in class cTile:
+                int GetX() const { return m_X; }
