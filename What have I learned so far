@@ -14,3 +14,7 @@
                 int GetX()  { return m_X; }
       CORRECT:  in class cTile:
                 int GetX() const { return m_X; }
+
+3. For "signed/unsigned mismatch" warnings
+    Example:    for (int i=0; i<m_GUIEntityVector.size(); i++)
+    CORRECT:    for (size_t i=0; i<m_GUIEntityVector.size(); i++)
