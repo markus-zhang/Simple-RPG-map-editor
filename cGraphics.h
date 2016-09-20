@@ -37,9 +37,20 @@ public:
 	void RenderTexture(SDL_Texture* texture, int srcX, int srcY, int desX, int desY,
 						int width, int height);
 
+	void RenderTextureModulate(SDL_Texture* texture, 
+							int srcX, int srcY, int desX, int desY,
+							int width, int height,
+							Uint8 red, Uint8 green, Uint8 blue);
+
 	void RenderTileSet(SDL_Texture* texture, int srcX, int srcY, int desX, int desY,
 						int srcWidth, int srcHeight, 
 						int desWidth, int desHeight);
+
+	void RenderTileSetModulate(SDL_Texture* texture, 
+							int srcX, int srcY, int desX, int desY,
+							int srcWidth, int srcHeight, 
+							int desWidth, int desHeight,
+							Uint8 red, Uint8 green, Uint8 blue);
 
 	void RenderTest();
 

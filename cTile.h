@@ -33,7 +33,8 @@ public:
 	int GetImageY() const			{ return m_ImageY; }
 	int GetWidth()  const			{ return m_Width; }
 	int GetHeight() const			{ return m_Height; }
-	int GetIsAccessible() const	{ return m_Access; }
+	int GetAccess() const			{ return m_Access; }
+	bool GetIsExit() const			{ return m_IsExit; }
 	void SetGraph(cGraphics* graph)	{ m_Graphics = graph; }
 	void SetPic(SDL_Texture* bitmap){ m_Bitmap = bitmap; }
 	void SetX(int x)				{ m_X = x; }
@@ -44,6 +45,7 @@ public:
 	void SetHeight(int height)		{ m_Height = height; }
 	void SetID(string id)			{ m_ID = id; }
 	void SetAccess(int access)		{ m_Access = access; }
+	void SetIsExit()				{ m_IsExit = 1; }
 
 	void SetIsBlink(bool temp)		{ m_Blink = temp; }
 	void SetHealth(int health)		{ m_Health = health; }
@@ -80,6 +82,12 @@ private:
 	int			m_HealthHolder;	// Indicate the health value
 	int			m_Health;		// How many cycles until death
 	bool		m_Trigger;		// 0 for show, 1 for disappear
+
+	//For level transition
+	bool		m_IsExit;		// Is this tile an exit?
+	std::string m_ExitID;		// ID of the next map	
+	int         m_TargetX;		// Location of player after transition
+	int         m_TargetY;		
 };
 
 //class cTileFile

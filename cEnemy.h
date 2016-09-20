@@ -12,7 +12,7 @@ public:
 	int GetStr()		{ return m_ATT_STR; }
 	int GetDex()		{ return m_ATT_DEX; }
 	int GetCon()		{ return m_ATT_CON; }
-	int GetDmg()		{ return m_COM_SPEED * 
+	int GetDmg()		{ return m_COM_Speed * 
 							(m_COM_Basedmg + m_COM_Weapondmg); }
 
 	//onSpawn() and onDeath() are just for test, real ones

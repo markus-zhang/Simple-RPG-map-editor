@@ -3,7 +3,7 @@
 
 cStateManager::cStateManager(cGraphics* graphics, cInput* input)
 {
-	//m_GameState = new cGameState(graphics, input);
+	m_GameState = new cGameState(graphics, input);
 	//m_MenuState = new cMainMenuState(graphics, input);
 	//m_ExitState = new cExitState(graphics, input);
 	//m_WinState  = new cWinState(graphics, input);
