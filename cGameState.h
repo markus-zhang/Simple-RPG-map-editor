@@ -9,10 +9,8 @@
 #include "cState.h"
 #include "cTile.h"
 #include "cMouse.h"
-#include "cGUI.h"
 #include "cStaticButton.h"
 #include "cCursor.h"
-#include "cLevel.h"
 #include "cFile.h"
 #include <vector>
 #include <stack>
@@ -20,53 +18,51 @@
 #include "sqlite3.h"
 #include "cDatabase.h"
 
-class cEditorState : public cState
+class cGameState : public cState
 {
 public:
-	cEditorState(cGraphics* graphics, cInput* input);
+	cGameState(cGraphics* graphics, cInput* input);
 
-	~cEditorState();
-
-	//void SaveMap(const char* filename);		// To save tiles
-	
+	~cGameState();
 	virtual bool Run(cStateManager* state_manager);
 	virtual void HandleInput(cStateManager* state_manager);
 	//virtual void UpdateMouse();
-	virtual void BlinkTile();
-	string GetEntityIDByLocation();
-	string GetTileIDByLocation();
-	void DeleteTile();
+	//virtual void BlinkTile();
+	//string GetEntityIDByLocation();
+	//string GetTileIDByLocation();
 	
 private:
 	//std::string AddIntToString(std::string str, int num);
 	int GetNearestX();
 	int GetNearestY();
-	//void RemoveTile();
+	//void DumpMap();
+	void RemoveTile();
 	//void RemoveEntity();
 	//void RemoveTileFile();
 	//void RemoveTileFileAt(int x, int y);
 	void Load(const char* mapfile, const char* entityfile);
 
 	int	TileCount;
-	int m_Mode;				// Tile, Obj and Access modes
+	//int m_Mode;				// Tile, Obj and Access modes
 
-	int GUIBoundaryX;		// To check if a GUI button
-	int GUIBoundaryY;		// has been clicked on
+	//int GUIBoundaryX;		// To check if a GUI button
+	//int GUIBoundaryY;		// has been clicked on
 
-	int EntityBoundaryX;	// To check if clicks on Entity
-	int EntityBoundaryY;
+	//int EntityBoundaryX;	// To check if clicks on Entity
+	//int EntityBoundaryY;
 
 	bool b_Error;			// Critical error flag
 
 	void Reset();
 
 	//SDL 2.0 code
+	//SDL_Texture* m_Bitmap;	// contains the game images
 	SDL_Texture* m_Tilemap;		// contains the tileset
-	SDL_Texture* m_Cursor;		// contains the painter cursor
-	SDL_Texture* m_ButtonPic;	// contains resources of buttons
+	//SDL_Texture* m_Cursor;		// contains the painter cursor
+	//SDL_Texture* m_ButtonPic;	// contains resources of buttons
 	SDL_Texture* m_EntityPic;	// contains the sprite sheet of entities
 
-	cCursor m_Painter;
+	//cCursor m_Painter;
 	/*
 		Method of showing and saving and loading the map
 		1. Map boundary is 1024*1024
@@ -86,26 +82,17 @@ private:
 	//vector<cTile>	m_MapShowVector;			// tiles for show if larger than editor
 	vector<cEntity> m_EntityVector;				// contains the entity information
 	vector<string> m_EntityIDVector;			// contains the entity id
-	cGUI m_GUI;
 	//vector<cStaticButton> m_GUIButtonVector;
-	vector<cStaticButton> m_GUIEntityVector;
-	vector<cStaticButton> m_GUITileVector;
-
-	cLevel m_LevelManager;
-
-	vector < vector<cTile> > m_MapStack;		// For Undo
-	vector < vector<cEntity> > m_EntityStack;	// For Undo
+	//vector<cStaticButton> m_GUIEntityVector;
+	//vector<cStaticButton> m_GUITileVector;
+	//vector < vector<cTile> > m_MapStack;		// For Undo
+	//vector < vector<cEntity> > m_EntityStack;	// For Undo
 	//vector<cTileFile>	m_MapFile;	//	contains saves
 	//cMouse m_Mouse;
-
-	//cFile m_MapData;				// Save/Load functions
+	cFile m_MapData;				// Save/Load functions
 	//cFile m_ButtonData;
-	//cFile m_EntityData;
+	cFile m_EntityData;
 	//cFile m_TileButtonData;
-
-	cFile m_FileManager;
-
-	cTextInput m_MapID;
 
 	//Database
 	cDatabase m_Enemy;				// To read the table Enemy

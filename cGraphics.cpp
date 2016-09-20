@@ -1,4 +1,5 @@
 #include "cGraphics.h"
+#include "DebugTool.h"
 
 cGraphics::cGraphics(int wndWidth, int wndHeight, string wndCaption)
 {
@@ -68,10 +69,35 @@ void cGraphics::RenderTexture(SDL_Texture* texture, int srcX, int srcY, int desX
 					&g_DesRect);
 }
 
+void cGraphics::RenderTextureModulate(SDL_Texture* texture, 
+								int srcX, int srcY, int desX, int desY,
+								int width, int height,
+								Uint8 red, Uint8 green, Uint8 blue)
+{
+	SDL_SetTextureColorMod(texture, red, green, blue);
+	SDL_Rect g_SrcRect = {srcX, srcY, width, height};
+	SDL_Rect g_DesRect = {desX, desY, width, height};
+	SDL_RenderCopy(m_Renderer, texture, &g_SrcRect,
+					&g_DesRect);
+}
+
 void cGraphics::RenderTileSet(SDL_Texture* texture, int srcX, int srcY, int desX, int desY,
 								int srcWidth, int srcHeight, 
 								int desWidth, int desHeight)
 {
+	SDL_Rect g_SrcRect = {srcX, srcY, srcWidth, srcHeight};
+	SDL_Rect g_DesRect = {desX, desY, desWidth, desHeight};
+	SDL_RenderCopy(m_Renderer, texture, &g_SrcRect,
+					&g_DesRect);
+}
+
+void cGraphics::RenderTileSetModulate(SDL_Texture* texture, 
+								int srcX, int srcY, int desX, int desY,
+								int srcWidth, int srcHeight, 
+								int desWidth, int desHeight,
+								Uint8 red, Uint8 green, Uint8 blue)
+{
+	SDL_SetTextureColorMod(texture, red, green, blue);
 	SDL_Rect g_SrcRect = {srcX, srcY, srcWidth, srcHeight};
 	SDL_Rect g_DesRect = {desX, desY, desWidth, desHeight};
 	SDL_RenderCopy(m_Renderer, texture, &g_SrcRect,

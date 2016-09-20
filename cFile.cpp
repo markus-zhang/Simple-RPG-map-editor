@@ -3,19 +3,33 @@
 cFile::cFile(){}
 cFile::~cFile(){}
 
-cEntity cFile::GetEntityByID(string id, int x, int y)
-{
-	vector<cEntity>::iterator it;
-	for (it = m_Entity.begin(); it != m_Entity.end(); it++)
-	{
-		if ((*it).GetID() == id)
-		{
-			(*it).SetX(x);
-			(*it).SetY(y);
-			return (*it);
-		}
-	}
-}
+//cEntity cFile::GetEntityByID(string id, int x, int y)
+//{
+//	vector<cEntity>::iterator it;
+//	cEntity temp;
+//	for (it = m_EntityButtonVector.begin(); it != m_EntityButtonVector.end(); it++)
+//	{
+//		if ((*it).GetID() == id)
+//		{
+//			temp = *it;
+//			temp.SetX(x);
+//			temp.SetY(y);
+//			return temp;
+//		}
+//	}
+//}
+
+//const std::vector<cStaticButton>& cFile::GetButtonVector() const
+//{
+//	if (!m_GUIButtonVector.empty())
+//		return m_GUIButtonVector;
+//}
+//
+//const std::vector<cStaticButton>& cFile::GetTileButtonVector() const
+//{
+//	if (!m_TileButtonVector.empty())
+//		return m_TileButtonVector;
+//}
 
 bool cFile::CheckFile(const char* filename, int filetype)
 {
@@ -32,7 +46,155 @@ bool cFile::CheckFile(const char* filename, int filetype)
 	return true;
 }
 
-bool cFile::LoadGUI(const char* guisetting)
+/*void cFile::Load(const char* gui, const char* tile, const char* entity,
+				cGraphics* graphics, SDL_Texture* guitexture,
+				SDL_Texture* tiletexture, SDL_Texture* entitytexture)
+{
+	LoadGUI(gui, graphics, guitexture, "gui");
+	LoadGUI(tile, graphics, tiletexture, "tile");
+	LoadEntityGUI(entity, graphics, entitytexture);
+}*/
+
+/*bool cFile::LoadGUI(const char* guisetting)
+{
+		LoadGUI, essentially is the same as LoadMap
+		Instead of loading tiles,
+		LoadGUI reads "gui.ini" and load GUI
+		gui.jpg contains the bitmap of all icons and menus
+		*****************
+		Sample structure of gui.ini:
+		Save	#ID
+		0		#ScreenX
+		0		#ScreenY
+		128		#ClipX
+		32		#ClipY
+		64		#Width
+		32		#Height
+		******************
+		Maybe we can also use TinyXML
+	
+	ifstream map_file;
+	map_file.open(guisetting);
+	if (!map_file.is_open())
+	{
+		cout << "File not found!";
+		return false;
+	}
+
+	string sTemp;
+	cStaticButton m_Holder;
+	//Read map file line by line
+	while (!map_file.eof())
+	{
+		getline(map_file, sTemp);
+		m_Holder.m_ID = sTemp.c_str();
+		
+		getline(map_file, sTemp);
+		m_Holder.m_X = atoi(sTemp.c_str());
+
+		getline(map_file, sTemp);
+		m_Holder.m_Y = atoi(sTemp.c_str());
+
+		getline(map_file, sTemp);
+		m_Holder.m_ImageX = atoi(sTemp.c_str());
+		//cout << m_Holder.m_ImageX << " ";
+
+		getline(map_file, sTemp);
+		m_Holder.m_ImageY = atoi(sTemp.c_str());
+		//cout << m_Holder.m_ImageY << " ";
+
+		getline(map_file, sTemp);
+		m_Holder.m_Width = atoi(sTemp.c_str());
+		//cout << m_Holder.m_Width << " ";
+
+		getline(map_file, sTemp);
+		m_Holder.m_Height = atoi(sTemp.c_str());
+		//cout << m_Holder.m_Height << " ";
+
+		//SDL_Delay(100);
+
+		//m_Holder.dump();
+		m_GUIButtonVector.push_back(m_Holder);
+	}
+	return true;
+}*/
+
+//bool cFile::LoadGUI(const char* guisetting, cGraphics* graphics,
+//					SDL_Texture* guitexture, std::string type)
+//{
+//	/*	LoadGUI, essentially is the same as LoadMap
+//		Instead of loading tiles,
+//		LoadGUI reads "gui.ini" and load GUI
+//		gui.jpg contains the bitmap of all icons and menus
+//		*****************
+//		Sample structure of gui.ini:
+//		Save	#ID
+//		0		#ScreenX
+//		0		#ScreenY
+//		128		#ClipX
+//		32		#ClipY
+//		64		#Width
+//		32		#Height
+//		******************
+//		Maybe we can also use TinyXML
+//	*/
+//	ifstream map_file;
+//	map_file.open(guisetting);
+//	if (!map_file.is_open())
+//	{
+//		cout << "File not found!";
+//		return false;
+//	}
+//
+//	string sTemp;
+//	cStaticButton m_Holder;
+//	//Read map file line by line
+//	while (!map_file.eof())
+//	{
+//		getline(map_file, sTemp);
+//		m_Holder.m_ID = sTemp.c_str();
+//		
+//		getline(map_file, sTemp);
+//		m_Holder.m_X = atoi(sTemp.c_str());
+//
+//		getline(map_file, sTemp);
+//		m_Holder.m_Y = atoi(sTemp.c_str());
+//
+//		getline(map_file, sTemp);
+//		m_Holder.m_ImageX = atoi(sTemp.c_str());
+//		//cout << m_Holder.m_ImageX << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.m_ImageY = atoi(sTemp.c_str());
+//		//cout << m_Holder.m_ImageY << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.m_Width = atoi(sTemp.c_str());
+//		//cout << m_Holder.m_Width << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.m_Height = atoi(sTemp.c_str());
+//		//cout << m_Holder.m_Height << " ";
+//
+//		m_Holder.m_Graphics = graphics;
+//		m_Holder.m_Bitmap = guitexture;
+//		
+//		if (type=="gui")
+//		{
+//			m_GUIButtonVector.push_back(m_Holder);
+//		}
+//		if (type=="tile")
+//		{
+//			m_TileButtonVector.push_back(m_Holder);
+//		}
+//	}
+//	return true;
+//}
+
+bool cFile::LoadGeneralButton(const char* guisetting, 
+							cGraphics* graphics,
+							SDL_Texture* guitexture,
+							std::string type, cGUI& gui)
 {
 	/*	LoadGUI, essentially is the same as LoadMap
 		Instead of loading tiles,
@@ -88,15 +250,87 @@ bool cFile::LoadGUI(const char* guisetting)
 		m_Holder.m_Height = atoi(sTemp.c_str());
 		//cout << m_Holder.m_Height << " ";
 
-		//SDL_Delay(100);
-
-		//m_Holder.dump();
-		m_GUIButtonVector.push_back(m_Holder);
+		m_Holder.m_Graphics = graphics;
+		m_Holder.m_Bitmap = guitexture;
+		
+		if (type=="gui")
+		{
+			gui.GetGeneralButton().push_back(m_Holder);
+			//m_GUIButtonVector.push_back(m_Holder);
+		}
+		if (type=="tile")
+		{
+			gui.GetTileButton().push_back(m_Holder);
+		}
 	}
+	gui.SetGeneralBoundary((gui.GetGeneralButton())[0].GetX(),
+						(gui.GetGeneralButton())[0].GetY());
 	return true;
 }
 
-bool cFile::LoadEntityGUI(const char* entityfile)
+bool cFile::LoadPopMenu(const char* guisetting, 
+							cGraphics* graphics,
+							SDL_Texture* guitexture,
+							cGUI& gui)
+{
+	ifstream map_file;
+	map_file.open(guisetting);
+	if (!map_file.is_open())
+	{
+		cout << "File not found!";
+		return false;
+	}
+
+	string sTemp;
+	cStaticButton m_Holder;
+	//Read map file line by line
+	while (!map_file.eof())	{
+		if (getline(map_file, sTemp))	{
+			if (sTemp  == "[/Popmenu]")
+				break;
+		}
+		if (getline(map_file, sTemp))	{
+			if (sTemp  == "[Popmenu]")	{
+				while (!map_file.eof())	{
+					getline(map_file, sTemp);
+					m_Holder.m_ID = sTemp.c_str();
+		
+					getline(map_file, sTemp);
+					m_Holder.m_X = atoi(sTemp.c_str());
+
+					getline(map_file, sTemp);
+					m_Holder.m_Y = atoi(sTemp.c_str());
+
+					getline(map_file, sTemp);
+					m_Holder.m_ImageX = atoi(sTemp.c_str());
+					//cout << m_Holder.m_ImageX << " ";
+
+					getline(map_file, sTemp);
+					m_Holder.m_ImageY = atoi(sTemp.c_str());
+					//cout << m_Holder.m_ImageY << " ";
+
+					getline(map_file, sTemp);
+					m_Holder.m_Width = atoi(sTemp.c_str());
+					//cout << m_Holder.m_Width << " ";
+
+					getline(map_file, sTemp);
+					m_Holder.m_Height = atoi(sTemp.c_str());
+					//cout << m_Holder.m_Height << " ";
+
+					m_Holder.m_Graphics = graphics;
+					m_Holder.m_Bitmap = guitexture;
+
+					gui.GetPopMenu().GetMenu().push_back(m_Holder);
+				}
+			}
+		}
+	}
+	std::cout << gui.GetPopMenu().Size() << std::endl;
+	return true;
+}
+
+bool cFile::LoadEntityButton(const char* entityfile, cGraphics* graphics,
+							SDL_Texture* entitytexture, cGUI& gui)
 {
 	/*	*****************
 		Sample structure of entity.txt:
@@ -179,11 +413,192 @@ bool cFile::LoadEntityGUI(const char* entityfile)
 		//m_Holder.dump();
 		m_Holder.InitialCurrentFrame();	// Set default as there is
 										//	such information in .ini
-		m_Entity.push_back(m_Holder);
+		m_Holder.SetGraph(graphics);
+		m_Holder.SetPic(entitytexture);
+		gui.GetEntityButton().push_back(m_Holder);
 	}
 	return true;
 }
 
+
+//bool cFile::LoadEntityGUI(const char* entityfile)
+//{
+//	/*	*****************
+//		Sample structure of entity.txt:
+//		Cleric	<- ID
+//		0		<- X coordination of its position of entity sprite sheet
+//		32		<- Y coordination of its position of entity sprite sheet
+//		0		<- Clip X
+//		0		<- Clip Y
+//		32		<- Width
+//		32		<- Height
+//		20		<- HP
+//		10		<- Gold dropped
+//		5		<- Exp rewarded
+//		0		<- Interactive?
+//		1		<- Direction
+//		4		<- # of frames
+//		******************
+//	*/
+//	ifstream map_file;
+//	map_file.open(entityfile);
+//	if (!map_file.is_open())
+//	{
+//		cout << "File not found!";
+//		return false;
+//	}
+//
+//	string sTemp;
+//	cEntity m_Holder;
+//	//Read map file line by line
+//	while (!map_file.eof())
+//	{
+//		getline(map_file, sTemp);
+//		m_Holder.SetID(sTemp.c_str());
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetX(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_X << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetY(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_Y << " ";
+//
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetImageX(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_ImageX << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetImageY(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_ImageY << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetWidth(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_Width << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetHeight(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_Height << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetHP(atoi(sTemp.c_str()));
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetGold(atoi(sTemp.c_str()));
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetExp(atoi(sTemp.c_str()));
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetInt(sTemp.c_str());
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetDir(atoi(sTemp.c_str()));
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetFrame(atoi(sTemp.c_str()));
+//
+//		//SDL_Delay(100);
+//
+//		//m_Holder.dump();
+//		m_Holder.InitialCurrentFrame();	// Set default as there is
+//										//	such information in .ini
+//		m_EntityButtonVector.push_back(m_Holder);
+//	}
+//	return true;
+//}
+
+//bool cFile::LoadEntityGUI(const char* entityfile, cGraphics* graphics,
+//							SDL_Texture* entitytexture)
+//{
+//	/*	*****************
+//		Sample structure of entity.txt:
+//		Cleric	<- ID
+//		0		<- X coordination of its position of entity sprite sheet
+//		32		<- Y coordination of its position of entity sprite sheet
+//		0		<- Clip X
+//		0		<- Clip Y
+//		32		<- Width
+//		32		<- Height
+//		20		<- HP
+//		10		<- Gold dropped
+//		5		<- Exp rewarded
+//		0		<- Interactive?
+//		1		<- Direction
+//		4		<- # of frames
+//		******************
+//	*/
+//	ifstream map_file;
+//	map_file.open(entityfile);
+//	if (!map_file.is_open())
+//	{
+//		cout << "File not found!";
+//		return false;
+//	}
+//
+//	string sTemp;
+//	cEntity m_Holder;
+//	//Read map file line by line
+//	while (!map_file.eof())
+//	{
+//		getline(map_file, sTemp);
+//		m_Holder.SetID(sTemp.c_str());
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetX(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_X << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetY(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_Y << " ";
+//
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetImageX(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_ImageX << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetImageY(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_ImageY << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetWidth(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_Width << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetHeight(atoi(sTemp.c_str()));
+//		//cout << m_Holder.m_Height << " ";
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetHP(atoi(sTemp.c_str()));
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetGold(atoi(sTemp.c_str()));
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetExp(atoi(sTemp.c_str()));
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetInt(sTemp.c_str());
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetDir(atoi(sTemp.c_str()));
+//
+//		getline(map_file, sTemp);
+//		m_Holder.SetFrame(atoi(sTemp.c_str()));
+//
+//		//SDL_Delay(100);
+//
+//		//m_Holder.dump();
+//		m_Holder.InitialCurrentFrame();	// Set default as there is
+//										//	such information in .ini
+//		m_Holder.SetGraph(graphics);
+//		m_Holder.SetPic(entitytexture);
+//		m_EntityButtonVector.push_back(m_Holder);
+//	}
+//	return true;
+//}
 
 //bool cFile::LoadMap(const char* filename)
 //{
@@ -340,6 +755,67 @@ bool cFile::LoadMap(const char* filename, vector<cTile>& mapvector,
 	return true;
 }
 
+bool cFile::LoadMap(const char* filename, 
+					cGraphics* graph, SDL_Texture* bitmap, 
+					cLevel& level)
+{
+	ifstream map_file;
+	map_file.open(filename);
+	if (!map_file.is_open())
+	{
+		cout << "File not found!";
+		return false;
+	}
+
+	string sTemp;
+	cTile m_Holder;
+
+	//Read map file line by line
+
+	while (!map_file.eof())
+	{
+		getline(map_file, sTemp);
+		if (sTemp.length() <= 0) return false;
+		m_Holder.SetID(sTemp.c_str());
+
+		getline(map_file, sTemp);
+		m_Holder.SetX(atoi(sTemp.c_str()));
+		//cout << m_Holder.GetX() << " ";
+
+		getline(map_file, sTemp);
+		m_Holder.SetY(atoi(sTemp.c_str()));
+		//cout << m_Holder.m_Y << " ";
+
+		getline(map_file, sTemp);
+		m_Holder.SetImageX(atoi(sTemp.c_str()));
+		//cout << m_Holder.m_ImageX << " ";
+
+		getline(map_file, sTemp);
+		m_Holder.SetImageY(atoi(sTemp.c_str()));
+		//cout << m_Holder.m_ImageY << " ";
+
+		getline(map_file, sTemp);
+		m_Holder.SetWidth(atoi(sTemp.c_str()));
+		//cout << m_Holder.m_Width << " ";
+
+		getline(map_file, sTemp);
+		m_Holder.SetHeight(atoi(sTemp.c_str()));
+		//cout << m_Holder.m_Height << " ";
+
+		getline(map_file, sTemp);
+		m_Holder.SetAccess(atoi(sTemp.c_str()));
+		//cout << m_Holder.m_Access << "\n";
+
+		//SDL_Delay(100);
+
+		//m_Holder.dump();
+		m_Holder.SetGraph(graph);
+		m_Holder.SetPic(bitmap);
+		level.GetMap().push_back(m_Holder);
+	}
+	return true;
+}
+
 bool cFile::LoadEntityFromFile(const char* filename,
 			vector<cEntity>& entityvector, 
 			cGraphics* graph, SDL_Texture* bitmap)
@@ -409,6 +885,78 @@ bool cFile::LoadEntityFromFile(const char* filename,
 		m_Holder.InitialCurrentFrame();
 		m_Holder.SetAniRate();
 		entityvector.push_back(m_Holder);
+	}
+	return true;
+}
+
+bool cFile::LoadEntityFromFile(const char* filename,
+								cGraphics* graph, SDL_Texture* bitmap,
+								cLevel& level)
+{
+	ifstream entity_file;
+	entity_file.open(filename);
+	if (!entity_file.is_open())
+	{
+		cout << "File not found!";
+		return false;
+	}
+
+	string sTemp;
+	cEntity m_Holder;
+
+	//Read entity file line by line
+
+	while (!entity_file.eof())
+	{
+		getline(entity_file, sTemp);
+		if (sTemp.length() <= 0) return false;
+		m_Holder.SetID(sTemp.c_str());
+
+
+		getline(entity_file, sTemp);
+		m_Holder.SetX(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetY(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetImageX(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetImageY(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetWidth(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetHeight(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetHP(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetGold(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetExp(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetInt(sTemp.c_str());
+
+		getline(entity_file, sTemp);
+		m_Holder.SetDir(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetFrame(atoi(sTemp.c_str()));
+
+		getline(entity_file, sTemp);
+		m_Holder.SetType(atoi(sTemp.c_str()));
+
+		m_Holder.SetGraph(graph);
+		m_Holder.SetPic(bitmap);
+		m_Holder.InitialCurrentFrame();
+		m_Holder.SetAniRate();
+		(level.GetEntity()).push_back(m_Holder);
 	}
 	return true;
 }

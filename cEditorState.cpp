@@ -19,7 +19,21 @@ cEditorState::cEditorState(cGraphics* graphics, cInput* input) :
 	m_Mode = Mode_Tile;
 
 	// Load Buttons
-	m_ButtonData.LoadGUI("gui.ini");
+	m_FileManager.LoadGeneralButton("gui.ini", m_Graphics, m_ButtonPic,
+									"gui", m_GUI);
+	m_FileManager.LoadGeneralButton("guitexture.ini", m_Graphics, m_Tilemap,
+									"tile", m_GUI);
+	m_FileManager.LoadPopMenu("gui.ini", m_Graphics, m_ButtonPic,
+								m_GUI);
+	m_FileManager.LoadEntityButton("entity.ini", m_Graphics, m_EntityPic,
+									m_GUI);
+	/*m_FileManager.Load("gui.ini", "guitexture.ini", "entity.ini",
+						m_Graphics,
+						m_ButtonPic, m_Tilemap, m_EntityPic);*/
+
+	//m_ButtonData.LoadGUI("gui.ini", m_Graphics, m_ButtonPic, "gui");
+
+	/*m_ButtonData.LoadGUI("gui.ini");
 	for (size_t nCount = 0; nCount < m_ButtonData.m_GUIButtonVector.size(); nCount ++)
 	{
 		if (nCount == 0)
@@ -37,10 +51,13 @@ cEditorState::cEditorState(cGraphics* graphics, cInput* input) :
 		m_ButtonData.m_GUIButtonVector[nCount].m_ID
 		));
 		cout << m_ButtonData.m_GUIButtonVector[nCount].m_ID << "\n";
-	}
+	}*/
 
 	// Load Buttons
-	m_TileButtonData.LoadGUI("guitexture.ini");
+	//m_TileButtonData.LoadGUI("guitexture.ini", m_Graphics, m_Tilemap,
+							//"tile");
+
+	/*m_TileButtonData.LoadGUI("guitexture.ini");
 	for (size_t nCount = 0; nCount < m_TileButtonData.m_GUIButtonVector.size(); nCount ++)
 	{
 		//if (nCount == 0)
@@ -57,28 +74,31 @@ cEditorState::cEditorState(cGraphics* graphics, cInput* input) :
 		m_TileButtonData.m_GUIButtonVector[nCount].m_Height,
 		m_TileButtonData.m_GUIButtonVector[nCount].m_ID
 		));
-	}
+	}*/
 
 	// Load Entity Sprite Sheet
-	m_EntityData.LoadEntityGUI("entity.ini");
-	for (size_t nCount = 0; nCount < m_EntityData.m_Entity.size(); nCount ++)
+	//m_EntityData.LoadEntityGUI("entity.ini", m_Graphics, m_EntityPic);
+
+	/*m_EntityData.LoadEntityGUI("entity.ini");
+	for (size_t nCount = 0; 
+		nCount < m_EntityData.m_EntityButtonVector.size(); nCount ++)
 	{
 		if (nCount == 0)
 		{
-			EntityBoundaryX = m_EntityData.m_Entity[nCount].GetX();
-			EntityBoundaryY = m_EntityData.m_Entity[nCount].GetY();
+			EntityBoundaryX = m_EntityData.m_EntityButtonVector[nCount].GetX();
+			EntityBoundaryY = m_EntityData.m_EntityButtonVector[nCount].GetY();
 		}
 
 		m_GUIEntityVector.push_back(cStaticButton(m_Graphics, m_EntityPic,
-		m_EntityData.m_Entity[nCount].GetX(), 
-		m_EntityData.m_Entity[nCount].GetY(),
-		m_EntityData.m_Entity[nCount].GetImageX(), 
-		m_EntityData.m_Entity[nCount].GetImageY(),
-		m_EntityData.m_Entity[nCount].GetWidth(), 
-		m_EntityData.m_Entity[nCount].GetHeight(),
-		m_EntityData.m_Entity[nCount].GetID()
+		m_EntityData.m_EntityButtonVector[nCount].GetX(), 
+		m_EntityData.m_EntityButtonVector[nCount].GetY(),
+		m_EntityData.m_EntityButtonVector[nCount].GetImageX(), 
+		m_EntityData.m_EntityButtonVector[nCount].GetImageY(),
+		m_EntityData.m_EntityButtonVector[nCount].GetWidth(), 
+		m_EntityData.m_EntityButtonVector[nCount].GetHeight(),
+		m_EntityData.m_EntityButtonVector[nCount].GetID()
 		));
-	}
+	}*/
 
 	// Load database and test
 	m_Enemy.OpenDB("enemy.db");
@@ -87,6 +107,8 @@ cEditorState::cEditorState(cGraphics* graphics, cInput* input) :
 
 	m_XBias = 0;
 	m_YBias = 0;	// Initially there is no bias
+
+	m_MapID.SetGraphics(m_Graphics);
 }
 
 cEditorState::~cEditorState()
@@ -156,45 +178,55 @@ bool cEditorState::Run(cStateManager* state_manager)
 
 	//Clear the screen before every frame
 	m_Graphics->ClearScreen();
+	m_MapID.Draw();
 
-	/*m_Graphics->RenderTileSet(m_Tilemap, NULL, NULL, 0, 0, 
-								512, 32, 512, 32);*/
-	
 	BlinkTile();
 	//cout << "After blink" << "\n";
+	for (size_t i=0; i<(m_LevelManager.GetMap()).size(); i++)
+	{
+		(m_LevelManager.GetMap())[i].DrawBias(m_XBias, m_YBias);
+	}
+
+	for (size_t i=0; i<(m_LevelManager.GetEntity()).size(); i++)
+	{
+		(m_LevelManager.GetEntity())[i].SetCurrentFrame();
+		(m_LevelManager.GetEntity())[i].DrawBias(m_XBias, m_YBias);
+	}
+
+	/*DELETE THIS
 	for (size_t i=0; i<m_MapVector.size(); i++)
 	{
-		//m_MapVector[i].Draw();
 		m_MapVector[i].DrawBias(m_XBias, m_YBias);
 	}
 
 	for (size_t i=0; i<m_EntityVector.size(); i++)
 	{
-		if (m_EntityVector.size() == 0) break;
 		m_EntityVector[i].SetCurrentFrame();
-		//m_EntityVector[i].Draw();
 		m_EntityVector[i].DrawBias(m_XBias, m_YBias);
 	}
+	DELETE*/
 
-	for (size_t i=0; i<m_GUIButtonVector.size(); i++)
+	m_GUI.Draw();
+
+	/*for (size_t i=0; i<(m_FileManager.m_GUIButtonVector).size(); i++)
 	{
-		m_GUIButtonVector[i].Draw();
+		(m_FileManager.m_GUIButtonVector[i]).Draw();
 	}
-	
-	for (size_t i=0; i<m_GUIEntityVector.size(); i++)
+
+	for (size_t i=0; i<(m_FileManager.m_TileButtonVector).size(); i++)
 	{
-		m_GUIEntityVector[i].Draw();
+		(m_FileManager.m_TileButtonVector[i]).Draw();
 	}
-	
-	for (size_t i=0; i<m_GUITileVector.size(); i++)
+
+	for (size_t i=0; i<(m_FileManager.m_EntityButtonVector).size(); i++)
 	{
-		m_GUITileVector[i].Draw();
-	}
+		(m_FileManager.m_EntityButtonVector[i]).Draw();
+	}*/
 
 	m_Painter.Draw();
 
 	m_Graphics->Show();
-
+	
 	return m_IsRunning;
 }
 
@@ -217,6 +249,12 @@ void cEditorState::HandleInput(cStateManager* state_manager)
 			{
 				state_manager->ChangeState(State_Menu);			
 			} break;*/
+
+			case SDL_SCANCODE_BACKSPACE:	{
+				if (m_MapID.m_EnableEditing == 1 && m_MapID.m_InputText.size() > 0)
+					m_MapID.Delete();
+			}
+
 
 			case SDL_SCANCODE_LEFT:
 			{
@@ -242,31 +280,35 @@ void cEditorState::HandleInput(cStateManager* state_manager)
 
 			case SDL_SCANCODE_D:
 			{
-				DumpMap();
+				//DumpMap();
 			} break;
-
-			// Test Button blink
-			//case SDL_SCANCODE_B:
-			//{
-			//	m_Test.onClickTemp();
-			//} break;
 
 			// Delete tile
 			case SDL_SCANCODE_DELETE:
 			{
+				/*DELETE THIS
 				if (m_MapVector.size() > 0)
 				{
 					m_MapStack.push_back(m_MapVector);		// Save current state
 					cout << "Old state saved " << m_MapStack.size() <<"\n";
 				}
 				RemoveTile();
-				//RemoveTileFileAt(m_Painter.GetX(), 
-				//				m_Painter.GetY());
+				DELETE*/
+				
+				if ((m_LevelManager.GetMap()).size() > 0)
+				{
+					m_LevelManager.SaveMapState();
+					cout << "Old state saved " << (m_LevelManager.GetMap()).size() <<"\n";
+				}
+				m_LevelManager.RemoveTile(m_Painter.GetX(),
+										m_Painter.GetY(), m_XBias, 
+										m_YBias);
 			} break;
 
 			// Undo
 			case SDL_SCANCODE_U:
 			{
+				/*DELETE THIS
 				if (m_MapStack.size() == 0)
 				{
 					cout << "Cannot Undo." << "\n";
@@ -275,21 +317,27 @@ void cEditorState::HandleInput(cStateManager* state_manager)
 				cout << "Undo" << "\n";
 				m_MapVector = m_MapStack.back();
 				m_MapStack.pop_back();
+				DELETE*/
+
+				m_LevelManager.Undo();
+				
 			} break;
 
 			case SDL_SCANCODE_S:
 			{
-				//Save Map
+				/*DELETE THIS				
 				m_MapData.SaveMap("map1.txt", m_MapVector);
-				//Save Entity
 				m_EntityData.SaveEntity("entity.sav", m_EntityVector);
+				DELETE*/
+				m_FileManager.SaveMap("map1.txt",
+								m_LevelManager.GetMap());
+				m_FileManager.SaveEntity("entity.sav",
+								m_LevelManager.GetEntity());
 			} break;
 
 			case SDL_SCANCODE_L:
 			{
-				m_MapVector.clear();
 				//Load Map
-				//m_MapData.LoadMap("map1.txt", m_MapVector, m_Graphics);
 				Load("map1.txt", "entity.sav");
 				//cout << "We have " << m_MapData.m_MapFile.size() << " tiles" << "\n";
 				//for (int nCount = 0; nCount < m_MapData.m_MapFile.size(); nCount ++)
@@ -317,18 +365,32 @@ void cEditorState::HandleInput(cStateManager* state_manager)
 				int x = m_Input->GetX();
 				int y = m_Input->GetY();
 				
+				// Click on TextInput
+
+				// Click on Pop menu
+				if (m_GUI.GetPopMenu().GetActivated() == 1)	{
+					std::string temp = m_GUI.GetPopMenu().
+						ReturnMenuID(m_Input->GetX(), m_Input->GetY());
+					if	(temp == "PopDelete")	{
+						DebugMessage("Delete");
+						DeleteTile();
+					}
+					if	(temp == "PopSet") DebugMessage("Set");
+					if	(temp == "PopReturn")	{
+						DebugMessage("Return");
+						m_GUI.GetPopMenu().ShutDown();
+					}
+				}
+
 				// Click on tileset
-				if (x <= TILE_MENU_X_TOTAL	&& y <= TILE_MENU_Y_TOTAL)
+				if (x < TILE_MENU_X_TOTAL	&& y <= TILE_MENU_Y_TOTAL)
 				{
-					if (m_MapVector.size() > 0)
+					/*if (m_MapVector.size() > 0)
 					{
 						m_MapStack.push_back(m_MapVector);		// Save current state
 						cout << "Old state saved" << m_MapStack.size() << "\n";
-					}
-					//cout << m_Input->GetX()+m_XBias << " " 
-					//	<< m_Input->GetY()+m_YBias << "\n";
-					//cout << GetNearestX() << " "
-					//	<< GetNearestY() << "\n";
+					}*/
+					m_LevelManager.SaveMapState();
 
 					/* Paint the tile
 			       Note that in reality tileset is 16*16
@@ -339,57 +401,153 @@ void cEditorState::HandleInput(cStateManager* state_manager)
 				   We must draw as 32*32 */
 
 					// Before push_back, delete duplicate
-					RemoveTile();
+					m_LevelManager.RemoveTile(m_Painter.GetX(),
+										m_Painter.GetY(), m_XBias, 
+										m_YBias);
+
+					//RemoveTile();
 					string id = GetTileIDByLocation();
 
-					m_MapVector.push_back(cTile(m_Graphics, m_Tilemap,
+					/*m_MapVector.push_back(cTile(m_Graphics, m_Tilemap,
 								m_Painter.GetX()+m_XBias, m_Painter.GetY()+m_YBias,
 								GetNearestX(), GetNearestY(),
 								TILE_WIDTH, TILE_HEIGHT,1,
-								0,0,1,0,id));
+								0,0,1,0,id));*/
+					(m_LevelManager.GetMap()).push_back(cTile(m_Graphics, m_Tilemap,
+								m_Painter.GetX()+m_XBias, m_Painter.GetY()+m_YBias,
+								GetNearestX()+m_GUI.GetTileXBias(), GetNearestY(),
+								TILE_WIDTH, TILE_HEIGHT,1,
+								0,0,1,0,id));	//m_XBias for screen coordinate
+												//m_GUI.GetTileXBias() for src coordinate
 
 					// Need to delete this and re-write the savemap function
 					//(m_MapData.m_MapFile).push_back(cTileFile(m_Painter.GetX(), 
 					//	m_Painter.GetY(), GetNearestX(), 
 					//	GetNearestY(), 
 					//	TILE_WIDTH, TILE_HEIGHT,1));
-					cout << "One tile pushed" << "\n";
+					DebugMessage("One tile pushed");
+				}
+				
+				// If click on Tile Scroll buttons
+				if (x >= TILE_MENU_X_TOTAL	&& x < TILE_MENU_X_TOTAL+32 &&
+					y <= TILE_MENU_Y_TOTAL)	{
+					DebugMessage("You clicked on Tile Right Scroll");
+					m_GUI.OnClickTileRightScroll();
+				}
+				if (x >= TILE_MENU_X_TOTAL+32	&& x < TILE_MENU_X_TOTAL+64 &&
+					y <= TILE_MENU_Y_TOTAL)	{
+					DebugMessage("You clicked on Tile Left Scroll");
+					m_GUI.OnClickTileLeftScroll();
 				}
 
-				// Click on entityset
-				if (x <= ENTITY_MENU_WIDTH * m_GUIEntityVector.size()
+				//New click on tileset, need to create cLevel class
+				//if (x <= TILE_MENU_X_TOTAL	&& y <= TILE_MENU_Y_TOTAL)
+				//{
+				//	if (m_MapVector.size() > 0)
+				//	{
+				//		m_MapStack.push_back(m_MapVector);		// Save current state
+				//		cout << "Old state saved" << m_MapStack.size() << "\n";
+				//	}
+				//	//cout << m_Input->GetX()+m_XBias << " " 
+				//	//	<< m_Input->GetY()+m_YBias << "\n";
+				//	//cout << GetNearestX() << " "
+				//	//	<< GetNearestY() << "\n";
+
+				//	/* Paint the tile
+			    //   Note that in reality tileset is 16*16
+				//   But we will display every tile as 32*32
+				//   So when we push, must divide GetNearestX
+				//   and GetNearestY by 2 as they divide 32!
+				//   But when draw (see draw() in cTile.cpp
+				//   We must draw as 32*32 */
+
+				//	// Before push_back, delete duplicate
+				//	RemoveTile();
+				//	string id = GetTileIDByLocation();
+
+				//	m_MapVector.push_back(cTile(m_Graphics, m_Tilemap,
+				//				m_Painter.GetX()+m_XBias, m_Painter.GetY()+m_YBias,
+				//				GetNearestX(), GetNearestY(),
+				//				TILE_WIDTH, TILE_HEIGHT,1,
+				//				0,0,1,0,id));
+
+				//	// Need to delete this and re-write the savemap function
+				//	//(m_MapData.m_MapFile).push_back(cTileFile(m_Painter.GetX(), 
+				//	//	m_Painter.GetY(), GetNearestX(), 
+				//	//	GetNearestY(), 
+				//	//	TILE_WIDTH, TILE_HEIGHT,1));
+				//	cout << "One tile pushed" << "\n";
+				//}
+
+				/* Click on entityset */
+				DebugMessage("");
+				//If clicked on entity
+				if (x <= ENTITY_MENU_WIDTH * 
+					(m_GUI.GetEntityButton()).size()
 					&& y <= ENTITY_MENU_HEIGHT &&
 					y > ENTITY_MENU_HEIGHT - 32)
 				{
-					if (m_EntityVector.size() > 0)
+					/*if (m_EntityVector.size() > 0)
 					{
 						m_EntityStack.push_back(m_EntityVector);		// Save current state
 						cout << "Old state saved" << m_MapStack.size() << "\n";
-					}
-					//cout << m_Input->GetX() << " " 
-					//	<< m_Input->GetY() << "\n";
-					//cout << GetNearestX() << " "
-					//	<< GetNearestY() << "\n";
+					}*/
+					m_LevelManager.SaveEntityState();
 					
-					RemoveEntity();
+					//RemoveEntity();
+					m_LevelManager.RemoveEntity(m_Painter.GetX(),
+										m_Painter.GetY(), m_XBias, 
+										m_YBias);
 					string id = GetEntityIDByLocation();
-					cEntity temp = m_EntityData.GetEntityByID(id,
+					cEntity temp = m_GUI.GetEntityByID(id,
 									m_Painter.GetX(), m_Painter.GetY());
-	//This is wrong, need to push back cEntity(...)
-	//The right way is to extract all information from temp
-	//and use push_back(cEntity(...))
-					m_EntityVector.push_back(cEntity(m_Graphics,
+					//This is wrong, need to push back cEntity(...)
+					//The right way is to extract all information from temp
+					//and use push_back(cEntity(...))
+					(m_LevelManager.GetEntity()).push_back(cEntity(m_Graphics,
 					m_EntityPic, temp.GetX(), temp.GetY(),
 					temp.GetImageX(), temp.GetImageY(), 
 					temp.GetWidth(), temp.GetHeight(),
 					temp.GetID(), temp.GetHP(), temp.GetGold(),
 					temp.GetExp(), temp.GetInteractive(), 
 					0, temp.GetFrame()));
+					/*m_EntityVector.push_back(cEntity(m_Graphics,
+					m_EntityPic, temp.GetX(), temp.GetY(),
+					temp.GetImageX(), temp.GetImageY(), 
+					temp.GetWidth(), temp.GetHeight(),
+					temp.GetID(), temp.GetHP(), temp.GetGold(),
+					temp.GetExp(), temp.GetInteractive(), 
+					0, temp.GetFrame()));*/
 
-					cout << "One entity pushed" << "\n";
+					DebugMessage((m_LevelManager.GetEntity()).size()+
+									"");
+					//cout << m_EntityVector.size() << "\n";
+
+					DebugMessage("One entity pushed");
 				}
 
 				// If clicks on Save Button
+				if (x > m_GUI.GetBoundaryX() && x <= m_GUI.GetBoundaryX() + EDITOR_GUI_WIDTH)
+				//if (x > GUIBoundaryX && x <= GUIBoundaryX + EDITOR_GUI_WIDTH)
+				{
+					DebugMessage("Saving...");
+					if (y <= m_GUI.GetBoundaryY() + EDITOR_GUI_HEIGHT)	
+						//m_MapData.SaveMap("map1.txt", m_MapVector);
+						m_FileManager.SaveMap("map1.txt", 
+											m_LevelManager.GetMap());
+						m_FileManager.SaveEntity("entity.sav",
+								m_LevelManager.GetEntity());
+				}
+				//Click on Load
+				if (x > m_GUI.GetBoundaryX() + EDITOR_GUI_WIDTH
+					&& x <= m_GUI.GetBoundaryX() + 2 * EDITOR_GUI_WIDTH)
+				{
+					if (y <= m_GUI.GetBoundaryY() + EDITOR_GUI_HEIGHT)	
+					{
+						Load("map1.txt", "entity.sav");	
+					}
+				}
+				/*
 				if (x > GUIBoundaryX && x <= GUIBoundaryX + EDITOR_GUI_WIDTH)
 				{
 					if (y <= GUIBoundaryY + EDITOR_GUI_HEIGHT)	
@@ -403,76 +561,59 @@ void cEditorState::HandleInput(cStateManager* state_manager)
 					{
 						Load("map1.txt", "entity.sav");	
 					}
-				}
+				}*/
 
-				if (x > GUIBoundaryX + 2 * EDITOR_GUI_WIDTH
-					&& x<= GUIBoundaryX + 3 * EDITOR_GUI_WIDTH)
+				if (x > m_GUI.GetBoundaryX() + 2 * EDITOR_GUI_WIDTH
+					&& x<= m_GUI.GetBoundaryX() + 3 * EDITOR_GUI_WIDTH)
 				{
-					if (y <= GUIBoundaryX + EDITOR_GUI_HEIGHT)
+					if (y <= m_GUI.GetBoundaryY() + EDITOR_GUI_HEIGHT)
 					{
 						m_IsRunning = 0;	// Quit
 					}
 				}
 
-				if (x > GUIBoundaryX + 3 * EDITOR_GUI_WIDTH
-					&& x<= GUIBoundaryX + 4 * EDITOR_GUI_WIDTH)
+				if (x > m_GUI.GetBoundaryX() + 3 * EDITOR_GUI_WIDTH
+					&& x<= m_GUI.GetBoundaryX() + 4 * EDITOR_GUI_WIDTH)
 				{
 					if (m_XBias > EDITOR_BIAS_X_MIN)
 					{
 						m_XBias -= 32;	// Scroll to left
-						cout << m_XBias;
 					}
 				}
 
-				if (x > GUIBoundaryX + 4 * EDITOR_GUI_WIDTH
-					&& x<= GUIBoundaryX + 5 * EDITOR_GUI_WIDTH)
+				if (x > m_GUI.GetBoundaryX() + 4 * EDITOR_GUI_WIDTH
+					&& x<= m_GUI.GetBoundaryX() + 5 * EDITOR_GUI_WIDTH)
 				{
 					if (m_XBias < EDITOR_BIAS_X_MAX)
 					{
 						m_XBias += 32;	// Scroll to right
-						cout << "You changed xbias to " << m_XBias;
 					}
 				}
 			}break;
 			
 			case 2:
 			{
-				cout << "Middle Mouse Button Pressed" << "\n";
-				cout << m_Input->GetX() << " " 
-					<< m_Input->GetY() << "\n";
-				cout << GetNearestX() << " "
-						<< GetNearestY() << "\n";
+				//Middle Button Event
 			}break;
 
 			case 3:
 			{
-				cout << "Right Mouse Button Pressed" << "\n";
-				cout << m_Input->GetX() << " " 
-					<< m_Input->GetY() << "\n";
-				cout << GetNearestX() << " "
-						<< GetNearestY() << "\n";
+				//Right Button Event
+				if (m_Input->GetX() < EDITOR_MOUSE_X_MAX &&
+					m_Input->GetY() < EDITOR_MOUSE_Y_MAX &&
+					m_Input->GetY() > EDITOR_MOUSE_Y_START)	{
+					//Relocate the cursor
+					m_Painter.SetX(GetNearestX());
+					m_Painter.SetY(GetNearestY());
+				
+					m_GUI.GetPopMenu().DrawHide("entity", GetNearestX(),
+						GetNearestY());
+				}
 			}break;
 		}
 	}
 
-	//// Handle keys being held down
-	//if ( m_Input->KeyHeld(SDL_SCANCODE_LEFT) && PlayerCanMoveLeft() )
-	//{
-	//	m_Player.MoveLeft();
-	//}
-	//if ( m_Input->KeyHeld(SDL_SCANCODE_RIGHT) && PlayerCanMoveRight() )
-	//{
-	//	m_Player.MoveRight();
-	//}
-	//if ( m_Input->KeyHeld(SDL_SCANCODE_SPACE) )
-	//{
-	//	cProjectile* proj = m_Player.Shoot();
-	//	if (proj != NULL)
-	//	{
-	//		m_PlayerProjectiles.push_back(proj);
-	//	}
-	//	proj = NULL;
-	//}
+	// Handle keys being held down (find the code at cGameState)
 }
 
 int cEditorState::GetNearestX()
@@ -495,15 +636,6 @@ int cEditorState::GetNearestY()
 	return 0;
 }
 
-void cEditorState::DumpMap()
-{
-	vector<cTile>::iterator it;
-	for (it = m_MapVector.end(); it != m_MapVector.begin(); it --)
-	{
-		//cout << it->GetX() << " " << it->GetY() << "\n";
-	}
-}
-
 void cEditorState::BlinkTile()
 {
 	// Check where the cursor is
@@ -511,13 +643,16 @@ void cEditorState::BlinkTile()
 	int y = m_Painter.GetY()+m_YBias;
 	vector<cTile>::iterator it;
 
-	if (m_MapVector.size() == 0)
+	/*if (m_MapVector.size() == 0)
 	{
-		//cout << "No Map!" << "\n";
+		return;
+	}*/
+	if ((m_LevelManager.GetMap()).size()==0)	{
 		return;
 	}
 	// Check which tile is under the cursor rightnow
-	for (it = m_MapVector.begin(); it != m_MapVector.end(); it ++)
+	for (it = (m_LevelManager.GetMap()).begin();
+			it != (m_LevelManager.GetMap()).end(); it ++)
 	{
 		// If the cursor has left, unblink it
 		if ((*it).IsBlink())
@@ -537,8 +672,29 @@ void cEditorState::BlinkTile()
 								EDITOR_BUTTON_BLINK, 0);
 		}
 	}
+	/*
+	for (it = m_MapVector.begin(); it != m_MapVector.end(); it ++)
+	{
+		// If the cursor has left, unblink it
+		if ((*it).IsBlink())
+		{
+			if ((*it).GetX() != x || (*it).GetY() != y)
+			{
+				(*it).SetIsBlink(0);
+			}
+		}
+		if ((*it).GetX() == x && (*it).GetY() == y)
+		{
+			if ((*it).IsBlink())
+			{
+				return;
+			}
+			(*it).SetSpecial(1, EDITOR_BUTTON_BLINK, 
+								EDITOR_BUTTON_BLINK, 0);
+		}
+	}*/
 }
-
+/*
 void cEditorState::RemoveTile()
 {
 	vector<cTile>::iterator it;
@@ -557,8 +713,9 @@ void cEditorState::RemoveTile()
 			break;
 		}
 	}
-}
+}/*
 
+/*
 void cEditorState::RemoveEntity()
 {
 	vector<cEntity>::iterator it;
@@ -570,14 +727,14 @@ void cEditorState::RemoveEntity()
 
 	for (it = m_EntityVector.begin(); it != m_EntityVector.end(); it ++)
 	{
-		if ((*it).GetX() == m_Painter.GetX() && 
-			(*it).GetY() == m_Painter.GetY())
+		if ((*it).GetX() == m_Painter.GetX() + m_XBias && 
+			(*it).GetY() == m_Painter.GetY() + m_YBias)
 		{
 			m_EntityVector.erase(it);
 			break;
 		}
 	}
-}
+}*/
 
 string cEditorState::GetEntityIDByLocation()
 {
@@ -585,16 +742,29 @@ string cEditorState::GetEntityIDByLocation()
 	int y = m_Painter.GetY();
 	//Now we compare those values against 
 	//entities in m_GUIEntityVector
-	vector<cStaticButton>::iterator it;
-	for (it = m_GUIEntityVector.begin(); it!= m_GUIEntityVector.end(); it++)
+	vector<cEntity>::iterator it;
+	for (it = (m_GUI.GetEntityButton()).begin();
+			it!= (m_GUI.GetEntityButton()).end(); it++)
 	{
-		if ((*it).m_X == GetNearestX() && 
-			(*it).m_Y == GetNearestY())
+		if ((*it).GetX() == GetNearestX() && 
+			(*it).GetY() == GetNearestY())
 		{
-			return (*it).m_ID;
+			DebugMessage("Found" + (*it).GetID());
+			return (*it).GetID();
 			break;
 		}
 	}
+	//for (it = (m_FileManager.m_EntityButtonVector).begin();
+	//		it!= (m_FileManager.m_EntityButtonVector).end(); it++)
+	//{
+	//	if ((*it).GetX() == GetNearestX() && 
+	//		(*it).GetY() == GetNearestY())
+	//	{
+	//		DebugMessage("Found" + (*it).GetID());
+	//		return (*it).GetID();
+	//		break;
+	//	}
+	//}
 	return "N/A";
 }
 
@@ -645,11 +815,27 @@ string cEditorState::GetTileIDByLocation()
 
 void cEditorState::Load(const char* mapfile, const char* entityfile)
 {
-	m_MapVector.clear();
+	//m_MapVector.clear()
+	(m_LevelManager.GetMap()).clear();
 	//Load Map
-	m_MapData.LoadMap(mapfile, m_MapVector, m_Graphics, m_Tilemap);
-	m_EntityVector.clear();
-	m_EntityData.LoadEntityFromFile(entityfile, m_EntityVector,
-		m_Graphics, m_EntityPic);
+	//m_MapData.LoadMap(mapfile, m_MapVector, m_Graphics, m_Tilemap);
+	m_FileManager.LoadMap(mapfile, m_Graphics, m_Tilemap,
+						m_LevelManager);
+	//m_EntityVector.clear();
+	(m_LevelManager.GetEntity()).clear();
+	/*m_EntityData.LoadEntityFromFile(entityfile, m_EntityVector,
+		m_Graphics, m_EntityPic);*/
+	m_FileManager.LoadEntityFromFile(entityfile, m_Graphics,
+								m_EntityPic, m_LevelManager);
 	//cout << (m_EntityData.GetEntityByID("Corpse", 128, 128)).GetID() << " ";
+}
+
+void cEditorState::DeleteTile()	{
+	if ((m_LevelManager.GetMap()).size() > 0)
+	{
+		m_LevelManager.SaveMapState();
+		cout << "Old state saved " << (m_LevelManager.GetMap()).size() <<"\n";
+	}
+	m_LevelManager.RemoveTile(m_Painter.GetX(), m_Painter.GetY(),
+		m_XBias, m_YBias);
 }
