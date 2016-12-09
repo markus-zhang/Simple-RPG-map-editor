@@ -5,7 +5,7 @@ cTimer::cTimer()
 	// Tell SDL to intialize its timer component //
 	SDL_Init(SDL_INIT_TIMER);
 
-	Reset();	
+	Reset();
 }
 
 cTimer::~cTimer() {}
@@ -28,5 +28,3 @@ void cTimer::Reset()
 {
 	m_Ticks = SDL_GetTicks();
 }
-
-// Aaron Cox, 2005 

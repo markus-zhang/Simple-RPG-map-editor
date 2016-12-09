@@ -8,6 +8,7 @@
 #pragma once
 
 #include "cEditorState.h"
+#include "cGameState.h"
 
 class cStateManager
 {
@@ -24,6 +25,7 @@ public:
 private:
 
 	cEditorState*	m_EditorState;
+	cGameState*	m_GameState;
 
 	cState* m_CurrentState;
 };

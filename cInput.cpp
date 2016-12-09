@@ -9,6 +9,7 @@ cInput::cInput(void)
 	{
 		m_KeysHeld[i] = false;
 	}
+	m_Current = NULL;
 }
 
 cInput::~cInput(void) {}
@@ -40,11 +41,21 @@ bool cInput::GetEvent()
 			SetX(x);
 			SetY(y);
 		}
+
+		if (m_Event.type == SDL_TEXTINPUT)	{
+			if (m_Current != NULL)	{
+				AppendString(m_Current, m_Event.text.text);
+			}
+		}
 		return true;
 	}
 
 	// No event has occured //
 	return false;
+}
+
+void cInput::AppendString(cTextInput* textinput, std::string input)	{
+	textinput->Append(input);
 }
 
 // Return true if user has manually closed the window //
@@ -86,6 +97,12 @@ int cInput::GetMousePressed()
 		return 2;
 	}
 
+}
+
+bool cInput::GetMouseMoved() {
+	if (m_Event.type == SDL_MOUSEMOTION)
+		return true;
+	return false;
 }
 
 // Return true if the given key is being held down //

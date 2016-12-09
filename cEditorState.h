@@ -9,15 +9,18 @@
 #include "cState.h"
 #include "cTile.h"
 #include "cMouse.h"
-//#include "cGUIButton.h"
+#include "cGUI.h"
 #include "cStaticButton.h"
 #include "cCursor.h"
+#include "cLevel.h"
 #include "cFile.h"
 #include <vector>
 #include <stack>
 #include "DebugTool.h"
 #include "sqlite3.h"
 #include "cDatabase.h"
+#include "cEditorPlayerStart.h"
+
 
 class cEditorState : public cState
 {
@@ -30,20 +33,15 @@ public:
 	
 	virtual bool Run(cStateManager* state_manager);
 	virtual void HandleInput(cStateManager* state_manager);
-	//virtual void UpdateMouse();
 	virtual void BlinkTile();
-	string GetEntityIDByLocation();
-	string GetTileIDByLocation();
+	std::string GetEntityIDByLocation();
+	std::string GetTileIDByLocation();
+	void DeleteTile();
 	
 private:
-	//std::string AddIntToString(std::string str, int num);
 	int GetNearestX();
 	int GetNearestY();
-	void DumpMap();
-	void RemoveTile();
-	void RemoveEntity();
-	//void RemoveTileFile();
-	//void RemoveTileFileAt(int x, int y);
+
 	void Load(const char* mapfile, const char* entityfile);
 
 	int	TileCount;
@@ -60,11 +58,11 @@ private:
 	void Reset();
 
 	//SDL 2.0 code
-	//SDL_Texture* m_Bitmap;	// contains the game images
 	SDL_Texture* m_Tilemap;		// contains the tileset
 	SDL_Texture* m_Cursor;		// contains the painter cursor
 	SDL_Texture* m_ButtonPic;	// contains resources of buttons
 	SDL_Texture* m_EntityPic;	// contains the sprite sheet of entities
+	//SDL_Texture* m_TestPic;
 
 	cCursor m_Painter;
 	/*
@@ -81,22 +79,25 @@ private:
 		10. and m_Y >= 192, if yes then substract both values
 		11. and make m_X_new = m_X-64, m_Y_new = m_Y-192
 	*/
-	vector<cTile>	m_MapVector;				// contains the map information
+	std::vector<cTile>	m_MapVector;				// contains the map information
 	int m_XBias, m_YBias;						// scrolling parameters
 	//vector<cTile>	m_MapShowVector;			// tiles for show if larger than editor
-	vector<cEntity> m_EntityVector;				// contains the entity information
-	vector<string> m_EntityIDVector;			// contains the entity id
-	vector<cStaticButton> m_GUIButtonVector;
-	vector<cStaticButton> m_GUIEntityVector;
-	vector<cStaticButton> m_GUITileVector;
-	vector < vector<cTile> > m_MapStack;		// For Undo
-	vector < vector<cEntity> > m_EntityStack;	// For Undo
-	//vector<cTileFile>	m_MapFile;	//	contains saves
-	//cMouse m_Mouse;
-	cFile m_MapData;				// Save/Load functions
-	cFile m_ButtonData;
-	cFile m_EntityData;
-	cFile m_TileButtonData;
+	std::vector<cEntity> m_EntityVector;				// contains the entity information
+	std::vector<std::string> m_EntityIDVector;			// contains the entity id
+	cGUI m_GUI;
+	//vector<cStaticButton> m_GUIButtonVector;
+	std::vector<cStaticButton> m_GUIEntityVector;
+	std::vector<cStaticButton> m_GUITileVector;
+
+	cLevel m_LevelManager;
+
+	std::vector < std::vector<cTile> > m_MapStack;		// For Undo
+	std::vector < std::vector<cEntity> > m_EntityStack;	// For Undo
+
+	cFile m_FileManager;
+
+	cTextInput m_MapID;
+	bool m_MapIDInput;
 
 	//Database
 	cDatabase m_Enemy;				// To read the table Enemy
@@ -104,4 +105,11 @@ private:
 	//sqlite3* m_database;
 	//sqlite3_stmt* m_statement;
 	//vector<string> m_tableid;
+
+	//Items
+	//vector<cItem> m_Inventory;
+
+	//Scroll Title
+	//cScrollTitle* m_TitleTest;
+	cEditorPlayerStart m_PlayerStart;
 }; 
