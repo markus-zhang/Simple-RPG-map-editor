@@ -6,7 +6,7 @@ cTile::~cTile(){}
 cTile::cTile(cGraphics* graphics, SDL_Texture* bitmap, int x, int y, 
 		int img_x, int img_y, int width, int height, bool access,
 		bool tempdisplay, int healthholder, int health, int blink,
-		string id)
+		std::string id)
 {
 	m_Graphics = graphics;
 	m_Bitmap = bitmap; 
@@ -51,6 +51,21 @@ void cTile::Draw()
 	m_Graphics->RenderTileSet(m_Bitmap, m_ImageX, m_ImageY, m_X, m_Y, 
 								TILE_WIDTH, TILE_HEIGHT, 
 								TILE_DISPLAY_WIDTH, TILE_DISPLAY_HEIGHT);
+}
+
+void cTile::GameDraw(int xbias, int ybias)
+{
+	int m_X_new = m_X - xbias;
+	int m_Y_new = m_Y - ybias;
+	if (m_X == 192 && m_Y == 288)
+	{
+		
+		//std::cout << "Center is: " << m_ID << " " << m_X_new << " " << m_Y_new << "\n";
+	}
+
+	m_Graphics->RenderTileSet(m_Bitmap, m_ImageX, m_ImageY, m_X_new, m_Y_new,
+		TILE_WIDTH, TILE_HEIGHT,
+		TILE_DISPLAY_WIDTH, TILE_DISPLAY_HEIGHT);
 }
 
 void cTile::DrawBias(int xbias, int ybias)
@@ -120,25 +135,3 @@ bool cTile::IsBlink()
 {
 	return m_Blink;
 }
-
-//cTileFile::cTileFile(){}
-//cTileFile::~cTileFile(){}
-//
-//cTileFile::cTileFile(int x, int y, int img_x, int img_y, int width,
-//					int height, bool access)
-//{
-//	m_X = x; 
-//	m_Y = y;
-//	m_ImageX = img_x; 
-//	m_ImageY = img_y; 
-//	m_Width = width; 
-//    m_Height = height;
-//	m_Access = access;
-//}
-//
-//void cTileFile::dump()
-//{
-//	cout << m_ImageX << " " << m_ImageY << " " << m_X << " "
-//			<< m_Y << " " << m_Width << " " << m_Height << " "
-//			<< m_Access << "\n";
-//}

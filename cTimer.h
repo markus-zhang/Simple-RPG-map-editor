@@ -1,7 +1,3 @@
-//////////////////////////////////////////////////////////////////////////////////
-// Project: SDL Game Engine
-//////////////////////////////////////////////////////////////////////////////////
-
 #pragma once
 
 #pragma comment(lib, "SDL2.lib")
@@ -18,18 +14,16 @@ public:
 	~cTimer();
 
 	// Return the number of milliseconds that have passed since Reset() was last called 
-	Uint32 GetMilliseconds(); 
+	Uint32 GetMilliseconds();
 
 	// Return the number of seconds that have passed since Reset() was last called 
-	Uint32 GetSeconds();      
+	Uint32 GetSeconds();
 
 	// Reset the timer 
-	void Reset();     
+	void Reset();
 
 private:
 	// This variable stores the time the Reset() was 
 	// last called at. See GetMilliseconds() for its use. 
-	Uint32 m_Ticks;	
+	Uint32 m_Ticks;
 };
-
-// Aaron Cox, 2005 

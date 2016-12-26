@@ -9,6 +9,16 @@
 //#define WINDOW_HEIGHT  400
 //#define WINDOW_TITLE   "Space Invaders Clone"
 
+// Game defines
+#define GAME_WIDTH				800
+#define GAME_HEIGHT				640
+#define GAME_MAP_WIDTH			512
+#define GAME_MAP_HEIGHT			512
+#define GAME_TITLE				"Dragonlance 0.01"
+#define GAME_GRID				32
+
+#define MONSTER_FOV				128	// 4 grids
+
 // Editor Window defines
 #define EDITOR_WIDTH			800
 #define EDITOR_HEIGHT			640
@@ -30,20 +40,22 @@
 #define EDITOR_GUI_WIDTH		32
 #define EDITOR_GUI_HEIGHT		32
 
-#define EDITOR_BUTTON_BLINK		30	// 30 frames of animation when clicked
+#define EDITOR_BUTTON_BLINK		30		// 30 frames of animation when clicked
 
 // Frame rate related defines 
-#define FRAMES_PER_SECOND		30
+#define FRAMES_PER_SECOND		50
 #define FRAME_RATE				1000/FRAMES_PER_SECOND  // frame rate (for the menu states)
-#define PHYSICS_FPS				100   // physics iterations per second (for the game state)
+#define PHYSICS_FPS				30   // physics iterations per second (for the game state)
 
 // Tile related defines
-#define TILE_MENU_X_TOTAL		512	//Tilemap starts from x=0
+#define TILE_MENU_X_TOTAL		320	//Tilemap starts from x=0
 #define TILE_MENU_Y_TOTAL		32	//Tilemap starts from y=0
 #define TILE_WIDTH				32
 #define TILE_HEIGHT				32
 #define TILE_DISPLAY_WIDTH		32
 #define TILE_DISPLAY_HEIGHT		32
+#define EDITOR_TILE_MAXIMUM		10
+#define EIDTOR_TILE_SCROLL		320		//x of Tile Scroll buttons
 
 // Entity menu related defines
 #define ENTITY_MENU_WIDTH		32
@@ -51,6 +63,11 @@
 #define ENTITY_WIDTH			32
 #define ENTITY_HEIGHT			32
 #define ENTITY_ANIMATE_RATE		200	//200ms for 1 frame
+
+// GUI related
+#define PLAYERSTART_FONT_SIZE	18
+#define PLAYERSTART_X			600
+#define PLAYERSTART_Y			300
 
 //// Player related defines 
 //#define PLAYER_IMG_X       0

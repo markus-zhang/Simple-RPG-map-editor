@@ -2,7 +2,7 @@
 
 cEntity::cEntity(cGraphics* graphics, SDL_Texture* bitmap, int x, 
 	int y, int img_x, int img_y, int width, int height, 
-	string id, int hp, int gold, int exp, bool interactive,
+	std::string id, int hp, int gold, int exp, bool interactive,
 	int direction, int frame) :
 	m_Graphics(graphics),
 	m_Bitmap(bitmap), 

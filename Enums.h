@@ -6,10 +6,11 @@
 
 enum Direction
 {
-	Direction_Left,
+	/*Direction_Left,
 	Direction_Right,
 	Direction_Up,
-	Direction_Down
+	Direction_Down*/
+	North, South, West, East
 };
 
 enum State

@@ -11,6 +11,7 @@
 
 #include "SDL.h"
 #include "cGraphics.h"
+#include "cTextInput.h"
 //#include "cMouse.h"
 
 class cInput
@@ -40,13 +41,22 @@ public:
 	int GetHeight() { return m_Height; }
 	void SetX(int x) { m_Position.x = x; }
 	void SetY(int y) { m_Position.y = y; }
+	void SetCurrent(cTextInput* source)	{ 
+		SDL_StartTextInput();
+		m_Current = source; 
+	}
+
+	void AppendString(cTextInput* textinput, std::string input);
 
 	int GetMousePressed();
+	bool GetMouseMoved();
 
 private:
 	SDL_Event m_Event;
 	bool m_KeysHeld[323];
 	const Uint8* currentKeyStates;
+
+	cTextInput* m_Current;
 
 	//For Mouse
 	

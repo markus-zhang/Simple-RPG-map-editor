@@ -3,15 +3,16 @@
 
 cStateManager::cStateManager(cGraphics* graphics, cInput* input)
 {
-	//m_GameState = new cGameState(graphics, input);
+	m_GameState = new cGameState(graphics, input);
 	//m_MenuState = new cMainMenuState(graphics, input);
 	//m_ExitState = new cExitState(graphics, input);
 	//m_WinState  = new cWinState(graphics, input);
 	//m_LoseState = new cGameOverState(graphics, input);
 	m_EditorState = new cEditorState(graphics, input);
 
-	// Start in the editor
-	m_CurrentState = m_EditorState;
+	// Start in the game
+	//m_CurrentState = m_EditorState;
+	m_CurrentState = m_GameState;
 }
 
 cStateManager::~cStateManager()

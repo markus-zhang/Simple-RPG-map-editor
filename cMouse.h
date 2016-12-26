@@ -1,3 +1,6 @@
+#ifndef CMOUSE_
+#define CMOUSE_
+
 #include "cGraphics.h"
 
 class cMouse
@@ -33,3 +36,4 @@ private:
 	int m_Width;
 	int m_Height;
 };
+#endif

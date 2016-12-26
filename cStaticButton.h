@@ -15,11 +15,17 @@ public:
 	cStaticButton(cGraphics* graphics, SDL_Texture* bitmap,
 				int x, int y,
 				int img_x, int img_y, int width, int height,
-				string id);
+				std::string id);
 	
 	cStaticButton() {}
-	
+	int GetX()			{ return m_X; }
+	int GetY()			{ return m_Y; }
+	std::string GetID()	{ return m_ID; }
 	void Draw();
+	void DrawBias(int xbias);
+	void DrawModulate(Uint8 red, Uint8 green, Uint8 blue,
+						int xbias);
+	bool OnClick(int x, int y);
 
 //private:
 	std::string m_ID;

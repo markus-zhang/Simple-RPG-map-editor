@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////
-// Project: SDL Game Engine
+// Project: Dragonlance Ultima spin-off
 // Description: The base class for all game entities.
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -17,7 +17,7 @@ public:
 	//SDL 2.0 code
 	cEntity(cGraphics* graphics, SDL_Texture* bitmap, int x, int y, 
 		int img_x, int img_y, int width, int height,
-		string id, int hp, int gold, int exp, bool interactive,
+		std::string id, int hp, int gold, int exp, bool interactive,
 		int direction, int frame);
 	
 	cEntity() {}
@@ -36,7 +36,7 @@ public:
 	int GetImageY()			const	{ return m_ImageY; }
 	int GetWidth()			const	{ return m_Width; }
 	int GetHeight()			const	{ return m_Height; }
-	string GetID()			const	{ return m_ID; }
+	std::string GetID()			const	{ return m_ID; }
 	int GetHP()				const	{ return m_HP; }
 	int GetGold()			const	{ return m_Gold; }
 	int GetExp()			const	{ return m_Exp; }
@@ -50,12 +50,12 @@ public:
 	void SetImageY(int image_y)		{ m_ImageY = image_y;}
 	void SetWidth(int width)		{ m_Width = width;}
 	void SetHeight(int height)		{ m_Height = height;}
-	void SetID(string id)			{ m_ID = id;}
+	void SetID(std::string id)			{ m_ID = id;}
 	void SetType(int type)			{ m_Type = type; }
 	void SetHP(int hp)				{ m_HP = hp;}
 	void SetGold(int gold)			{ m_Gold = gold;}
 	void SetExp(int exp)			{ m_Exp = exp;}
-	void SetInt(string inter)		
+	void SetInt(std::string inter)		
 	{
 		if (inter == "0")
 		{
@@ -90,7 +90,7 @@ protected:
 	int m_Height;
 
 	// Game
-	string m_ID;			// Unique ID
+	std::string m_ID;			// Unique ID
 	int m_Type;				// 0:Character 1:Interactive 2:Static
 	int m_HP;				// 0 if it cannot be attacked
 	int m_Gold;				// Gold dispensed when destroyed
@@ -103,5 +103,4 @@ protected:
 	cTimer m_AnimationTimer;
 };
 
-// Aaron Cox, 2005
 // Markus Zhang, 2016
